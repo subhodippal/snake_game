@@ -1,0 +1,184 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Kirang+Haerang&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+}
+
+/* @$u6h0d!p -------------------------------------------  */
+
+.body {
+    background: url('./game_assests/images/background2.jpg');
+    min-height: 100vh;
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    /* background: radical-gradient(rgba(247, 247, 247, 0.61), rgba(0, 0, 0, 0.637)); */
+    background-image: radial-gradient(rgba(255, 254, 167, 0.836) 30%, rgba(227, 241, 189, 0.767) 100%);
+    /* background-image: radial-gradient(rgba(91, 243, 86, 0.836) 30%, rgba(24, 156, 123, 0.767) 100%); */
+    height: 90vmin;
+    width: 90vmin;
+    display: grid;
+    border: 4px solid rgba(0, 0, 0, 0.568);
+    grid-template-rows: repeat(20, 1fr);
+    grid-template-columns: repeat(20, 1fr);
+}
+
+.s_head {
+    background-image: radial-gradient(white, rgb(255, 37, 91) 20%, rgb(253, 224, 56) 100%);
+    /* background-color: rgb(250, 83, 97); */
+    border-radius: 40%;
+    transform: scale(1.4, 1.4);
+}
+
+.s_body {
+    background-image: radial-gradient(rgb(230, 76, 76) 10%, rgb(255, 142, 142) 70%, rgba(253, 63, 63, 0.596) 100%);
+    border-radius: 30%;
+    /* background-color: rgb(245, 118, 33); */
+    /* border-radius: 10%; */
+    /* background-image: liner-gradient(rgba(252, 177, 16, 0.904) 40%, rgb(250, 113, 33) 100%); */
+}
+
+.s_tail {
+    /* background-color: radial-gradient(rgb(20, 19, 19) 5%, rgb(255, 15, 75) 100%); */
+    background-image: radial-gradient(rgba(252, 93, 93, 0.877) 30%, rgba(255, 254, 253, 0.192) 100%);
+    transform: scale(.9, .9);
+    border-radius: 30%;
+}
+
+.food_good {
+    /* background-color: rgb(51, 202, 240); */
+    border-radius: 50%;
+    background-image: radial-gradient(rgb(255, 255, 255) 1%, rgba(17, 139, 148, 0.925) 60%, rgba(6, 117, 90, 0.781) 100%);
+    
+}
+
+.food_poison {
+    
+}
+
+.food_speel_speed {
+    
+}
+
+.food_speel_slow {
+    
+}
+
+.scoreBoard {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+    /* font-family: 'Kirang Haerang', cursive; */
+    font-family: 'Acme', sans-serif;
+    background: #f3f4a2;
+    padding: .5rem 1rem;
+    border: 1rem solid rgb(62 23 8);
+    min-width: 10rem;
+    width: max-content;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.scoreBoard hr {
+    margin: .25rem;
+}
+#gamepad {
+    display: none;
+    position: absolute;
+    bottom: 1rem;
+    background: #efe5a8;
+    width: 9rem;
+    height: 9rem;
+    border-radius:50%;
+    transform: rotate(45deg);
+    /* display: flex; */
+    flex: 1;
+    flex-direction: column;
+    border: 3px solid white;
+    box-shadow: 0px 0px 6px #222;
+    /* transition: ease-in 0.2s; */
+}
+
+#gamepad .row {
+    display: flex;
+    flex: 2;
+    flex-direction: row;
+    height: 4.5rem;
+}
+#gamepad .key {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    border-radius: 20px;
+}
+
+/* #gamepad .key:hover { */
+    /* transition: ease-in 0.2s; */
+    /* background-color: #e0ce84; */
+    /* opacity: 0.2; */
+/* } */
+#gamepad .key:active {
+    transition: ease-in 0.2s;
+    background-color: #b3920f;
+    opacity: 0.1;
+}
+
+#gamepad .key span {
+    transform: rotate(-45deg);
+    z-index: -9999;
+    font-weight: 600;
+    color: #7b5215;
+}
+
+.key-up {
+    border-right: 1px solid #777;
+    border-bottom: 1px solid #777;
+}
+.key-down {
+    border-left: 1px solid #777;
+    border-top: 1px solid #777;
+}
+.key-left {
+    border-right: 1px solid #777;
+    border-top: 1px solid #777;
+}
+.key-right {
+    border-left: 1px solid #777;
+    border-bottom: 1px solid #777;
+}
+
+/* ------------------------- Media Query ------------------------ */
+
+
+
+@media only screen and (max-width: 600px) {
+    .scoreBoard {
+        position: absolute;
+        top: 1rem;
+        left: calc(50vw - 6.5rem  );
+        width: 10rem;
+        height: 50px;
+        background: #f3f4a2;
+        font-size: 1.2rem;
+        border: .5rem solid rgb(62 23 8);
+    }
+
+    #gamepad {
+        display: flex;
+    }
+    .body {
+        align-items:flex-start;
+    }
+    #board {
+        margin-top: 110px;
+    }
+}
+/* @$u6h0d!p -------------------------------------------  */
