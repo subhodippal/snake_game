@@ -1,184 +1,387 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Kirang+Haerang&display=swap'); */
-/* @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap'); */
+/* ------------- @$u6h0d!p | Start CSS --------------*/
+
 @import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 * {
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
+	font-family: 'Acme', sans-serif
 }
-
-/* @$u6h0d!p -------------------------------------------  */
-
 .body {
-    background: url('./game_assests/images/background2.jpg');
-    min-height: 100vh;
-    background-size: 100vw 100vh;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	background-image: radial-gradient(rgb(189 203 79 / 84%) 10%, rgb(171 212 72 / 84%) 40%, rgb(88 113 28 / 84%) 70%, rgb(113 160 64 / 95%) 100%);
+	min-height: 100vh;
+	background-size: 100vw 100vh;
+	background-repeat: no-repeat;
+	display: flex;
+	justify-content: center;
 }
-
 #board {
-    /* background: radical-gradient(rgba(247, 247, 247, 0.61), rgba(0, 0, 0, 0.637)); */
-    background-image: radial-gradient(rgba(255, 254, 167, 0.836) 30%, rgba(227, 241, 189, 0.767) 100%);
-    /* background-image: radial-gradient(rgba(91, 243, 86, 0.836) 30%, rgba(24, 156, 123, 0.767) 100%); */
-    height: 90vmin;
-    width: 90vmin;
-    display: grid;
-    border: 4px solid rgba(0, 0, 0, 0.568);
-    grid-template-rows: repeat(20, 1fr);
-    grid-template-columns: repeat(20, 1fr);
+	background-image: radial-gradient(rgba(255, 254, 167, 0.836) 30%, rgba(227, 241, 189, 0.767) 100%);
+	height: 96vmin;
+	width: 96vmin;
+	display: grid;
+	border: 4px solid rgba(0, 0, 0, 0.568);
+	grid-template-rows: repeat(20, 1fr);
+	grid-template-columns: repeat(20, 1fr)
 }
-
 .s_head {
-    background-image: radial-gradient(white, rgb(255, 37, 91) 20%, rgb(253, 224, 56) 100%);
-    /* background-color: rgb(250, 83, 97); */
-    border-radius: 40%;
-    transform: scale(1.4, 1.4);
+	background-image: radial-gradient(white, rgb(255, 37, 91) 20%, rgb(253, 224, 56) 100%);
+	border-radius: 40%;
+	transform: scale(1.4, 1.4)
 }
-
 .s_body {
-    background-image: radial-gradient(rgb(230, 76, 76) 10%, rgb(255, 142, 142) 70%, rgba(253, 63, 63, 0.596) 100%);
-    border-radius: 30%;
-    /* background-color: rgb(245, 118, 33); */
-    /* border-radius: 10%; */
-    /* background-image: liner-gradient(rgba(252, 177, 16, 0.904) 40%, rgb(250, 113, 33) 100%); */
+	background-image: radial-gradient(rgb(230, 76, 76) 10%, rgb(255, 142, 142) 70%, rgba(253, 63, 63, 0.596) 100%);
+	border-radius: 30%
 }
-
 .s_tail {
-    /* background-color: radial-gradient(rgb(20, 19, 19) 5%, rgb(255, 15, 75) 100%); */
-    background-image: radial-gradient(rgba(252, 93, 93, 0.877) 30%, rgba(255, 254, 253, 0.192) 100%);
-    transform: scale(.9, .9);
-    border-radius: 30%;
+	background-image: radial-gradient(rgba(252, 93, 93, 0.877) 30%, rgba(255, 254, 253, 0.192) 100%);
+	transform: scale(.9, .9);
+	border-radius: 30%
 }
-
 .food_good {
-    /* background-color: rgb(51, 202, 240); */
-    border-radius: 50%;
-    background-image: radial-gradient(rgb(255, 255, 255) 1%, rgba(17, 139, 148, 0.925) 60%, rgba(6, 117, 90, 0.781) 100%);
-    
+	border-radius: 50%;
+	background-image: radial-gradient(rgb(255, 255, 255) 1%, rgba(16, 187, 199, 0.925) 60%, rgba(6, 117, 90, 0.781) 100%)
 }
-
-.food_poison {
-    
-}
-
-.food_speel_speed {
-    
-}
-
-.food_speel_slow {
-    
-}
-
-.scoreBoard {
-    position: absolute;
-    top: 2rem;
-    right: 3rem;
-    /* font-family: 'Kirang Haerang', cursive; */
-    font-family: 'Acme', sans-serif;
-    background: #f3f4a2;
-    padding: .5rem 1rem;
-    border: 1rem solid rgb(62 23 8);
-    min-width: 10rem;
-    width: max-content;
-    font-size: 1.5rem;
-    font-weight: bold;
+.food_poison {}.food_speel_speed {}.food_speel_slow {}.scoreBoard {
+	position: absolute;
+	top: 2rem;
+	right: 3rem;
+	background: #f3f4a2;
+	padding: .5rem 1rem;
+	border: 1rem solid rgb(62 23 8);
+	min-width: 10rem;
+	width: max-content;
+	font-size: 1.5rem;
+	font-weight: bold
 }
 .scoreBoard hr {
-    margin: .25rem;
+	margin: .25rem
 }
 #gamepad {
-    display: none;
-    position: absolute;
-    bottom: 1rem;
-    background: #efe5a8;
-    width: 9rem;
-    height: 9rem;
-    border-radius:50%;
-    transform: rotate(45deg);
-    /* display: flex; */
-    flex: 1;
-    flex-direction: column;
-    border: 3px solid white;
-    box-shadow: 0px 0px 6px #222;
-    /* transition: ease-in 0.2s; */
-}
+	/* display: none; */
+	flex: 1;
+	flex-direction: column;
+	position: absolute;
+	background: #efe5a8;
+	border: 3px solid white;
+	box-shadow: 0px 0px 6px #222;
+	border-radius: 50%;
+	transform: rotate(45deg);
 
+	bottom: 1rem;
+	width: 9rem;
+	height: 9rem;
+}
 #gamepad .row {
-    display: flex;
-    flex: 2;
-    flex-direction: row;
-    height: 4.5rem;
+	display: flex;
+	flex: 2;
+	flex-direction: row;
+	height: 4.5rem
 }
 #gamepad .key {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    border-radius: 20px;
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+	font-size: 1rem;
+	border-radius: 35%;
 }
-
-/* #gamepad .key:hover { */
-    /* transition: ease-in 0.2s; */
-    /* background-color: #e0ce84; */
-    /* opacity: 0.2; */
-/* } */
 #gamepad .key:active {
-    transition: ease-in 0.2s;
-    background-color: #b3920f;
-    opacity: 0.1;
+	transition: ease-in 0.2s;
+	background-color: #b3920f;
+	opacity: 0.1
 }
-
 #gamepad .key span {
-    transform: rotate(-45deg);
-    z-index: -9999;
-    font-weight: 600;
-    color: #7b5215;
+	transform: rotate(-45deg);
+	z-index: -9999;
+	font-weight: 600;
+	color: #7b5215;
 }
-
 .key-up {
-    border-right: 1px solid #777;
-    border-bottom: 1px solid #777;
+	border-right: 1px solid #a7983a91;
+	border-bottom: 1px solid #a7983a91
 }
 .key-down {
-    border-left: 1px solid #777;
-    border-top: 1px solid #777;
+	border-left: 1px solid #a7983a91;
+	border-top: 1px solid #a7983a91
 }
 .key-left {
-    border-right: 1px solid #777;
-    border-top: 1px solid #777;
+	border-right: 1px solid #a7983a91;
+	border-top: 1px solid #a7983a91
 }
 .key-right {
-    border-left: 1px solid #777;
-    border-bottom: 1px solid #777;
+	border-left: 1px solid #a7983a91;
+	border-bottom: 1px solid #a7983a91
+}
+#initial_dialouge {
+	position: absolute;
+	top: 25vh;
+	font-size: 2rem;
+	font-weight: 600;
+	background: #ffffff99;
+	border: 2px solid #748c42;
+	padding: 20px 30px;
+	z-index: 100;
+	color: #748c42;
+	word-spacing: .5rem;
+	box-shadow: 4px 6px 18px -4px #2c3c07d9
+}
+#modal {
+	display: none;
+	padding: 20px 30px;
+	width: 36vw;
+	position: absolute;
+	z-index: 100;
+	border: 4px solid #93ae51;
+	background-image: linear-gradient(180deg, #fdfef7, white, #f7ffb1, #d1f67a);
+	padding-top: 30px;
+	box-shadow: 0px 18px 15px -10px #28370969
+}
+#modal img {
+	margin: auto;
+	width: 80px;
+	flex: 1;
+	display: flex
+}
+#modal h3 {
+	padding: 2px;
+	display: flex;
+	flex: 1;
+	margin: auto;
+	justify-content: center;
+	font-size: 5rem;
+	color: #759645;
+	text-shadow: 4px 4px 6px #f6d325
+}
+#modal h4 {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+	color: #2f4200;
+	font-size: 1.4rem
+}
+#modal button {
+	padding: 8px 16px;
+	background: #96b253;
+	border-radius: 5px;
+	margin: auto;
+	display: flex;
+	margin-bottom: 20px;
+	cursor: pointer
+}
+#modal p {
+	color: #619614;
+	font-size: .8rem;
+	text-align: right;
+	margin-top: 30px
 }
 
-/* ------------------------- Media Query ------------------------ */
+/* JioPhone 2 */
+@media (min-width: 240px) and (min-height: 320px)  {
+	.scoreBoard {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 
+		height: 18px;
+		background: #f3f4a2;
+		font-size: 1rem;
+		border: .2rem solid rgb(62 23 8);
+		border-radius: 50px;
 
-
-@media only screen and (max-width: 600px) {
-    .scoreBoard {
-        position: absolute;
-        top: 1rem;
-        left: calc(50vw - 6.5rem  );
-        width: 10rem;
-        height: 50px;
-        background: #f3f4a2;
-        font-size: 1.2rem;
-        border: .5rem solid rgb(62 23 8);
-    }
-
-    #gamepad {
-        display: flex;
-    }
-    .body {
-        align-items:flex-start;
-    }
-    #board {
-        margin-top: 110px;
-    }
+		min-width: 80%;
+		margin: auto;
+		top: 5px;
+		left: 2vw;
+		right: 0;
+		margin: 0;
+	}
+	#board {
+		margin-top: calc(1rem + .4rem + 18px + 5px + 5px);
+	}
+	#initial_dialouge {
+		font-size: 1.2rem;
+		top: 30vh;
+	}
+	#modal {
+		width: 65vw;
+		margin-top: 10vh
+	}
+	#modal img {
+		width: 40px
+	}
+	#modal h3 {
+		font-size: 2rem
+	}
+	#gamepad {
+		display: none;
+		z-index: -100;
+		opacity: 0;
+	}
 }
-/* @$u6h0d!p -------------------------------------------  */
+
+/* Small Smartphones upto 442px height */
+@media (min-width: 320px) {
+	#board {
+		width: 92vw;
+		height: 92vw
+	}
+	#gamepad {
+		display: flex;
+		z-index: 100;
+		opacity: 1;
+		bottom: -1.4rem;
+		width: 20vh;
+		height: 20vh;
+	}
+	.scoreBoard {
+		left: 5vw;
+	}
+}
+
+/* Medium Smartphones upto 512px height */
+@media (min-width: 320px) and (min-height: 443px)  {
+	#board {
+		width: 92vw;
+		height: 92vw
+	}
+	#gamepad {
+		bottom: -1.2rem;
+		width: 21vh;
+		height: 21vh;
+	}
+}
+
+/* Large Smartphones upto 756px */
+@media (min-width: 320px) and (min-height: 513px) {
+	.scoreBoard {
+		top: 8px;
+	}
+	#board {
+		margin-top: calc(25px + 1.2rem + 15px);
+	}
+	#gamepad {
+		bottom: 1.5rem;
+		width: 26vh;
+		height: 26vh;
+	}
+}
+
+/*  ******** */
+/* iPhone X -- Large Smartphones upto 375x812 */
+@media (min-width: 375px) and (min-height: 812px) {
+	.scoreBoard {
+		top: 8px;
+	}
+	#board {
+		margin-top: calc(25px + 1.2rem + 15px);
+		width: 96vw;
+		height: 96vw
+	}
+	#gamepad {
+		bottom: 2rem;
+		width: 28vh;
+		height: 28vh;
+	}
+}
+
+/* iPad  -- Large Smartphones upto 375x812 756px */
+@media (min-width: 768px) and (min-height: 1024px) {
+	.scoreBoard {
+		position: absolute;
+		bottom: 11vh;
+		left: 2.7vw;
+		width: 89vw;
+		height: 32px;
+		background: #f3f4a2;
+		font-size: 1.5rem;
+		border: .3.5rem solid rgb(62 23 8);
+		margin-top: auto;
+		border-radius: 50px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between
+	}
+	#board {
+		margin-top: calc(10px);
+		width: 95vw;
+		height: 95vw
+	}
+	#gamepad {
+		bottom: 1rem;
+		width: 24vh;
+		height: 24vh;
+	}
+}
+
+/* Surface Duo  -- Large Smartphones upto 375x812 756px */
+@media (min-width: 540px) and (min-height: 720px) {
+	.scoreBoard {
+		position: absolute;
+		bottom: 11vh;
+		left: 2.7vw;
+		width: 89vw;
+		height: 24px;
+		background: #f3f4a2;
+		font-size: 1.2rem;
+		border: .3.5rem solid rgb(62 23 8);
+		margin-top: auto;
+		border-radius: 50px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between
+	}
+	#board {
+		margin-top: calc(8px);
+		width: 95vw;
+		height: 95vw
+	}
+	#gamepad {
+		bottom: 1rem;
+		width: 22vh;
+		height: 22vh;
+	}
+}
+
+/* small & large laptops min 1366px x 768px */
+@media (min-width: 1266px) {
+	.scoreBoard {
+		position: absolute;
+		flex-direction: column;
+		top: 1rem;
+		left: 1rem;
+		background: #f3f4a2;
+		padding: .5rem 1rem;
+		border: .2rem solid rgb(62 23 8);
+		min-width: 10rem;
+		width: max-content;
+		height: 5rem;
+		font-size: 1.5rem;
+		font-weight: bold;
+		border-radius: 1rem 2rem;
+	}
+	#board {
+		width: 94vh;
+		height: 94vh;
+		margin: 2vh;
+		padding: 0;
+	}
+
+	#modal {
+		width: 36vw;
+		margin-top: 10vh
+	}
+	#modal img {
+		width: 80px
+	}
+	#modal h3 {
+		font-size: 5rem
+	}
+	#initial_dialouge {
+		font-size: 4rem;
+	}
+	#gamepad {
+		bottom: 10vh;
+	}
+}
+
+/* ------------- @$u6h0d!p | End CSS --------------*/

@@ -4,45 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="This is a web based snake game like old nokia mobile! ">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game | Web Based Game</title>
+    <title>Snake Game | Web based snake game</title>
     <link rel="icon" type="image/jpeg" href="./game_assests/images/favicon.png" />
     <link rel="stylesheet" href="./styles.css" />
-    <meta name="theme-color" content="#87c029" />
+    <meta name="theme-color" content="#85b749" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body>
     <div class="body">
+        <div id="initial_dialouge">Press any arrow key to start</div>
+        <div id="modal">
+            <img src="./game_assests/images/favicon.png" />
+            <h3>Game Over</h3>
+            <h4></h4>
+            <button onclick="resetGame()">Play again</button>
+            <p></p>
+        </div>
         <div class="scoreBoard">
             <p id="currentScoreBoard">Score: 0</p>
             <hr />
             <p id="highscoreBoard">HighScore: 0</p>
         </div>
         <div id="board"></div>
-
-
-        <div id="gamepad">
-            <!-- Add onclik here and use event deligation | add event listner -->
-            <div class="row">
-                <div class="key key-up" onclick="keyInputHandler('ArrowUp')">
-                    <span>Up</span>
-                </div>
-                <div class="key key-right" onclick="keyInputHandler('ArrowRight')">
-                    <span>Right</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="key key-left" onclick="keyInputHandler('ArrowLeft')">
-                    <span>Left</span>
-                </div>
-                <div class="key key-down" onclick="keyInputHandler('ArrowDown')">
-                    <span>Down</span>
-                </div>
-            </div>
-        </div>
+        <div id="gamepad"></div>
     </div>
-
 </body>
 <script src="./index.js"></script>
 
-</html>
+</html><!-- ------------- @$u6h0d!p | End HTML -------------- -->
