@@ -28,7 +28,7 @@ const aboutMe = () => {
     for (const property in about) {
         console.log(`%c${property}: %c${about[property]}`, consoleStyleRedS, consoleStyleCyanS);
     }
-}
+};
 // ----------------------------- /Console Output ------------------------
 
 
@@ -78,7 +78,7 @@ const resetGame = () => {
     initial_dialouge.style.display = "block";
     manageScoreBoard('reset');
     gameState = 'initial';
-}
+};
 
 const manageScoreBoard = (status) => {
     if (status === 'reset') {
@@ -90,7 +90,7 @@ const manageScoreBoard = (status) => {
     highscore = (score > highscore) ? score : highscore;
     currentScoreBoard.innerHTML = 'Score: ' + score;
     highscoreBoard.innerHTML = 'HighScore: ' + highscore;
-}
+};
 
 const isColide = (snake) => {
     // body colide
@@ -128,7 +128,7 @@ const gameoverHandler = async () => {
 
     // updatehighscore
     await localStorage.setItem('highscore', JSON.stringify(highscore));
-}
+};
 
 const eatingFood = () => {
     // if food eaten then increase snake length, respawn new food, increment score
@@ -144,7 +144,7 @@ const eatingFood = () => {
         foodPosition = getRandomeFoodPosition();
         manageLevel();
     }
-}
+};
 
 const moveSnake = () => {
     for (let i = snakeArr.length - 2; i >= 0; i--) {
@@ -152,7 +152,7 @@ const moveSnake = () => {
     }
     snakeArr[0].x += inputDir.x;
     snakeArr[0].y += inputDir.y;
-}
+};
 
 const displaySnake = () => {
     // display the snake
@@ -173,7 +173,7 @@ const displaySnake = () => {
 
         board.appendChild(sankeElement);
     });
-}
+};
 
 const displayFood = () => {
     let foodElement = document.createElement('div');
@@ -181,7 +181,7 @@ const displayFood = () => {
     foodElement.style.gridColumnStart = foodPosition.y;
     foodElement.classList.add('food_good');
     board.appendChild(foodElement);
-}
+};
 
 const manageLevel = () => {
     if (score > 20 && score < 30)
@@ -196,7 +196,7 @@ const manageLevel = () => {
         speed = 9;
     else if (score > 130 && score < 150)
         speed = 10;
-}
+};
 
 
 // Main Game Engine
@@ -217,7 +217,7 @@ const gameEngine = () => {
 
     // move snaek
     moveSnake();
-}
+};
 
 // game loop 
 const main = (ctime) => {
@@ -227,7 +227,7 @@ const main = (ctime) => {
     }
     lastPaintTime = ctime;
     gameEngine();
-}
+};
 
 const isOppositeDirrection = (inputKey) => {
     if (inputKey === 'ArrowUp' && (inputDir.y < 0 || inputDir.y > 0))
@@ -242,7 +242,7 @@ const isOppositeDirrection = (inputKey) => {
         return true;
     else return false;
     // return true;
-}
+};
 
 // User input handler
 const keyInputHandler = (key) => {
@@ -274,7 +274,7 @@ const keyInputHandler = (key) => {
                 break;
         }
     }
-}
+};
 
 // Event Listners
 window.requestAnimationFrame(main);
@@ -286,5 +286,5 @@ gamepad.addEventListener('click', (e) => {
     else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
     else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
     else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
-})
+});
 // @$u6h0d!p -------------------------------------------

@@ -1,34 +1,31 @@
 // game constants and  variable
-let inputDir = { x: 0, y: 0 };
-const basePath = '../game_assests/musics/';
-
-const foodEatSound = new Audio(`${basePath}eat1.mp3`);
-// const turnSound = new Audio('game_assests/musics/turn1.mp3');
-const startSound = new Audio(`${basePath}start2.mp3`);
-const stopSound = new Audio(`${basePath}stop1.mp3`);
-const gameOverSound = new Audio(`${basePath}game_over1.mp3`);
-const bgMusicSound = new Audio(`${basePath}bgMusicSound1.mp3`);
+const foodEatSound = new Audio('../game_assests/musics/eat1.mp3');
+const startSound = new Audio('../game_assests/musics/start1.mp3');
+const stopSound = new Audio('../game_assests/musics/stop1.mp3');
 const acceptInputKeyCode = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 const boundaryArea = { min: 0, max: 20 };
 const foodPositionBetween = { min: 2, max: 18 };
-const about = {
-    developed_by: 'Subhodip Pal',
-    email: 'subhodip.india@gmail.com',
-    made_by: 'Made With ♥ by Subhodip Pal',
-    game: 'This is a simple web based snake game, using javascript,html,and css'
-};
 
-console.log(about.made_by);
-
+let inputDir = { x: 0, y: 0 };
 let speed = 4;
 let lastPaintTime = 0;
 let snakeArr = [{ x: 12, y: 15 }];
 let score = 0;
 let highscore = 0;
-let foodPosition = { x: 5, y: 2 };
-let previousInputKey = 0;
-
+let foodPosition = { x: 4, y: 15 };
 let gameState = 'initial'; //pause, play, initial, stop, gameover
+
+// ---------- About Me Section-------------
+const about = {
+    developed_by: 'Subhodip Pal',
+    email: 'subhodip.india@gmail.com',
+    made_by: 'Made with ♥ by Subhodip',
+    game: 'This is a simple web based snake game, using javascript,html,and css',
+};
+const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
+const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
+console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanS, consoleStyleRedS, consoleStyleCyanS);
+// ----------------------------- /About Me Section ------------------------
 
 (async () => {
     const highscoreJson = await localStorage.getItem('highscore');
@@ -43,10 +40,9 @@ const resetGame = () => {
     inputDir = { x: 0, y: 0 };
     snakeArr = [{ x: 12, y: 15 }];
     score = 0;
-
     manageScoreBoard('reset');
     gameState = 'initial';
-}
+};
 
 const manageScoreBoard = (status) => {
     if (status === 'reset') {
@@ -58,11 +54,11 @@ const manageScoreBoard = (status) => {
     highscore = (score > highscore) ? score : highscore;
     currentScoreBoard.innerHTML = 'Score: ' + score;
     highscoreBoard.innerHTML = 'HighScore: ' + highscore;
-}
+};
 
 const showGameoverPopup = () => {
     alert('Game Over. press any key to play again!');
-}
+};
 
 const isColide = (snake) => {
     // body colide
@@ -86,23 +82,14 @@ const getRandomeFoodPosition = (position = foodPositionBetween) => {
 };
 
 const gameoverHandler = async () => {
-    bgMusicSound.pause();
     stopSound.play();
-    // setTimeout(() => {
     gameState = 'gameover';
-    gameOverSound.play();
     showGameoverPopup();
-    // updatehighscore
     await localStorage.setItem('highscore', JSON.stringify(highscore));
-    // setHighScore();
-    // wait for alert ok 
     resetGame();
-    gameOverSound.pause();
-    // }, 100);
-}
+};
 
 const eatingFood = () => {
-    // if food eaten then increase snake length, respawn new food, increment score
     if (snakeArr[0].x === foodPosition.x && snakeArr[0].y === foodPosition.y) {
         // food eat
         foodEatSound.play();
@@ -114,15 +101,14 @@ const eatingFood = () => {
         // add new food
         foodPosition = getRandomeFoodPosition();
     }
-}
-
+};
 const moveSnake = () => {
     for (let i = snakeArr.length - 2; i >= 0; i--) {
         snakeArr[i + 1] = { ...snakeArr[i] };
     }
     snakeArr[0].x += inputDir.x;
     snakeArr[0].y += inputDir.y;
-}
+};
 const displaySnake = () => {
     // display the snake
     board.innerHTML = "";
@@ -141,48 +127,25 @@ const displaySnake = () => {
 
         board.appendChild(sankeElement);
     });
-}
+};
 const displayFood = () => {
     let foodElement = document.createElement('div');
     foodElement.style.gridRowStart = foodPosition.x;
     foodElement.style.gridColumnStart = foodPosition.y;
     foodElement.classList.add('food_good');
     board.appendChild(foodElement);
-}
-
-const manageLevel = () => {
-    console.log('Upcomming Features| this is in development mode');
-    // if (score > 5) {
-    //     console.log('score > 5   : speed', speed);
-    //     ++speed
-    // } else {
-    //     console.log('score < 5  : speed', speed);
-    // }
-}
+};
 
 
 // Main Game Engine
 const gameEngine = () => {
     // updateing the snake array and food!
-    if (isColide(snakeArr)) {
-        gameoverHandler();
-    }
-
-    // display the snake
+    if (isColide(snakeArr)) gameoverHandler();
     displaySnake();
-
-    // display the food
     displayFood();
-
-    // if sneke eating food
     eatingFood();
-
-    // move snaek
     moveSnake();
-
-    // manage snake speeed
-    // manageLevel();
-}
+};
 
 // game loop 
 const main = (ctime) => {
@@ -192,48 +155,62 @@ const main = (ctime) => {
     }
     lastPaintTime = ctime;
     gameEngine();
-}
+};
+
 
 // User input handler
-const keyInputHandler = (e) => {
+const keyInputHandler = (key) => {
+    // if (gameState === 'initial') {
+    //     gameState = 'start'; // start the game
+    //     startSound.play();
+    // }
 
-    // if (acceptInputKeyCode.includes(e.keyCode) && e.keyCode != previousInputKey) {
-
-    previousInputKey = e.key; // prevent duplicate input for same key
-
-    if (gameState === 'initial') {
-        gameState = 'start'; // start the game
-        startSound.play();
-        setTimeout(() => bgMusicSound.play(), 1000);
-    }
-    // turnSound.play();
-
-    switch (e) {
+    switch (key) {
         case "ArrowUp":
-            inputDir = inputDir.x > 0 ? { ...inputDir } : { x: -1, y: 0 };
-            // inputDir = { x: -1, y: 0 };
+            inputDir = { x: -1, y: 0 };
             break;
 
         case "ArrowDown":
-            inputDir = inputDir.x < 0 ? { ...inputDir } : { x: 1, y: 0 };
-            // inputDir = { x: 1, y: 0 };
+            inputDir = { x: 1, y: 0 };
             break;
 
         case "ArrowLeft":
-            inputDir = inputDir.y > 0 ? { ...inputDir } : { x: 0, y: -1 };
-            // inputDir = { x: 0, y: -1 };
+            inputDir = { x: 0, y: -1 };
             break;
 
         case "ArrowRight":
-            inputDir = inputDir.y < 0 ? { ...inputDir } : { x: 0, y: 1 };
-            // inputDir = { x: 0, y: 1 };
+            inputDir = { x: 0, y: 1 };
             break;
     }
-}
 
-// Listner
+    // switch (key) {
+    //     case "ArrowUp":
+    //         inputDir = inputDir.x > 0 ? { ...inputDir } : { x: -1, y: 0 };
+    //         break;
+
+    //     case "ArrowDown":
+    //         inputDir = inputDir.x < 0 ? { ...inputDir } : { x: 1, y: 0 };
+    //         break;
+
+    //     case "ArrowLeft":
+    //         inputDir = inputDir.y > 0 ? { ...inputDir } : { x: 0, y: -1 };
+    //         break;
+
+    //     case "ArrowRight":
+    //         inputDir = inputDir.y < 0 ? { ...inputDir } : { x: 0, y: 1 };
+    //         break;
+    // }
+};
+
+// Event Listners
 window.requestAnimationFrame(main);
 window.addEventListener('keydown', e => {
     acceptInputKeyCode.includes(e.key) && keyInputHandler(e.key);
+});
+gamepad.addEventListener('click', (e) => {
+    if (e.target.dataset.up != undefined) keyInputHandler('ArrowUp');
+    else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
+    else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
+    else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
 });
 // @$u6h0d!p -------------------------------------------
