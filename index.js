@@ -184,18 +184,25 @@ const displayFood = () => {
 };
 
 const manageLevel = () => {
-    if (score > 20 && score < 30)
+    if (score >= 10 && score < 20)
         speed = 5;
-    else if (score > 30 && score < 50)
+    else if (score >= 20 && score < 30)
         speed = 6;
-    else if (score > 50 && score < 70)
+    else if (score >= 30 && score < 40)
         speed = 7;
-    else if (score > 70 && score < 100)
+    else if (score >= 40 && score < 50)
         speed = 8;
-    else if (score > 100 && score < 130)
+    else if (score >= 50 && score < 60)
         speed = 9;
-    else if (score > 130 && score < 150)
+    else if (score >= 60 && score < 70)
         speed = 10;
+    else if (score >= 70 && score < 80)
+        speed = 12;
+    else if (score >= 80 && score < 90)
+        speed = 14;
+    else if (score >= 90 && score < 100)
+        speed = 16;
+    // else speed = 20;
 };
 
 

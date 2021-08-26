@@ -28,7 +28,7 @@ console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanS, consoleStyleR
 // ----------------------------- /About Me Section ------------------------
 
 (async () => {
-    const highscoreJson = await localStorage.getItem('highscore');
+    const highscoreJson = await localStorage.getItem('highscore_lite');
     highscore = !!highscoreJson ? JSON.parse(highscoreJson) : 0;
     highscoreBoard.innerHTML = 'HighScore: ' + highscore;
 })();
@@ -85,7 +85,7 @@ const gameoverHandler = async () => {
     stopSound.play();
     gameState = 'gameover';
     showGameoverPopup();
-    await localStorage.setItem('highscore', JSON.stringify(highscore));
+    await localStorage.setItem('highscore_lite', JSON.stringify(highscore));
     resetGame();
 };
 

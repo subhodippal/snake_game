@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="This is a web-based snake game like the old Nokia mobile have">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game | Web based snake game</title>
+    <link rel="icon" type="image/jpeg" href="../game_assests/images/favicon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <meta name="theme-color" content="#85b749" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta property="og:title" content="Snake Game | Web Based Snake Game" />
+    <meta property="og:description" content="This is a web-based snake game like the old Nokia mobile have!" />
+    <meta property="og:image" content="./game_assests/images/og_cover.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="body">
+        <div id="initial_dialouge">Press any arrow key to start</div>
+        <div id="modal">
+            <img src="./game_assests/images/favicon.png" />
+            <h3>Game Over</h3>
+            <h4></h4>
+            <button onclick="resetGame()">Play again</button>
+            <p></p>
+        </div>
+        <div class="scoreBoard">
+            <p id="currentScoreBoard">Score: 0</p>
+            <hr />
+            <p id="highscoreBoard">HighScore: 0</p>
+        </div>
+        <div id="board"></div>
+        <div id="gamepad"></div>
+    </div>
+</body>
+<script src="./index.js"></script>
+
+</html><!-- ------------- @$u6h0d!p | End HTML -------------- -->
