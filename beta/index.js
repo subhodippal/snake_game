@@ -14,7 +14,17 @@ const foodPositionBetween = { min: 2, max: 18 };
 const FOOD = '🍓';
 const FOOD_speed = '🚴';
 const FOOD_slow = '🐢';
+const FOOD_poison = '🦠';
 let SNAKE_HEAD = '';
+const FOOD_alienFace = '👽';
+const FOOD_skullFace = '💀';
+const FOOD_monsterFace = '👹';
+const FOOD_angryFace = '👿';
+const FOOD_tigerFace = '🐯';
+const FOOD_frogFace = '🐸';
+const FOOD_cowFace = '🐮';
+const FOOD_ratFace = '🐭';
+const FOOD_pandaFace = '🐼';
 
 const about = {
     developed_by: 'Subhodip Pal',
@@ -45,14 +55,21 @@ let snakeArr = [{ x: 12, y: 15, d: 'L' }]; // LRTB
 let score = 0;
 let highscore = 0;
 let foodPosition = { x: 4, y: 15 };
-let magicalFoodPosition = { x: 14, y: 10 };
+let magicalFoodPosition = { x: 1, y: 1 };
 let previousInputKey = 0;
 let life = 0;
-let magicalEffectTime = 10;
-let magicalEffectDelayTime = 25;
+let magicalEffectTime = 15;
+let magicalEffectDelayTime = 20;
+let randomMagialFoodIntervalTime = 4;
+let randomNormalFoodIntervalTime = 5;
+let slowModeIncreaseLimit = 2;
+let speedModeIncreaseLimit = 2;
 let magicalMode = '';
 let showMagicalFood = false;
 let randomeMoveMagicalFood = false;
+let startMagicalFood = false;
+let randomeMoveNormalFood = false;
+let isEnableSnakeMove = true;
 // let magicalFoodElement;
 
 let state = {
@@ -96,13 +113,19 @@ const resetGame = () => {
     document.querySelector('#modal p').innerText = '';
     gameOverSound.pause();
     gameOverSound.currentTime = 0;
+    magicalFoodPosition = { x: 0, y: 0 };
     // inputDir = { x: 0, y: 0 };
     // snakeArr = [{ x: 12, y: 15 }];
     score = 0;
     speed = 4;
     initial_dialouge.style.display = "block";
     manageScoreBoard('reset');
+    startMagicalFood = false;
+    showMagicalFood = false;
+    randomeMoveMagicalFood = false;
+    randomeMoveNormalFood = false;
     state.gameState = 'initial';
+    SNAKE_HEAD = '';
 };
 
 const manageScoreBoard = (status) => {
@@ -132,6 +155,10 @@ const isColide = (snake) => {
     return false;
 };
 
+const updateMagicalModeList = () => {
+    magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace', 'tigerFace', 'frogFace', 'pandaFace'];
+}
+
 const manageMagicalFood = () => {
     // Upcomming features
     /**
@@ -146,7 +173,7 @@ const manageMagicalFood = () => {
      * 8. Blind mode | 🕶 👓
      * faces:  😎🤑😛😜😇😌🤖👽👻💀👹👿😺👩👨🎅🐯🦁🐮🐷🐸🐵🐶🐱🐭🐹🐰🐻🐼🐨🐗
      * food type 1: 🕷🐞🐌🐢🐜🦀🐟🐡🐠🍄
-     * food type 2: 🍐🍏🍎🍊🍋🍉🍇🍓🍈🍒🍍🍅🍆🌶🌽🍔🍕🍥🍨🍦🍰🎂🍮🍬🍭🍫🍩🍺☕🍼
+     * food type 2: 🍐🍏🍎🍊🍋🍉🍇🍓🍈🍒🍍🍅🍆🌶🌽🍔🍕🍥🍨🍦🍰🎂🍮🍬🍭🍫🍩🍺☕🍼🍭🦠 
      * extra type: 🚴🏆🎖🕴👾🏍🚀🚦⛽🏠🏰⌚🕹⏳💎💰⚙❤🚫⏸▶👑💧🔥🔇🔊🍀
      * 
      * extras: 🌵 🔦📎〰➖◽◻ 🔲  
@@ -176,11 +203,25 @@ const manageMagicalFood = () => {
 
     // magicalModeList = ['slow', 'speed', 'poison', 'heal', 'magnet', 'distract', 'stones'];
     magicalModeList = ['slow', 'speed'];
-    // const rndInt = Math.floor(Math.random() * magicalModeList.length)
-    // magicalMode = magicalModeList[rndInt];
-    magicalMode = 'speed';
+    const rndInt = Math.floor(Math.random() * magicalModeList.length)
+    magicalMode = magicalModeList[rndInt];
+    updateMagicalModeList();
+
+    // alienFace = '👽';
+    // // skullFace = '💀';
+    // monsterFace = '👹';
+    // // angryFace = '👿';
+    // tigerFace = '🐯';
+    // frogFace = '🐸';
+    // // cowFace = '🐮';
+    // // ratFace = '🐭';
+    // pandaFace = '🐼';
+
+    // magicalMode = 'speed';
 }
 manageMagicalFood();
+
+
 
 
 const setMegicalEffect = () => {
@@ -190,45 +231,75 @@ const setMegicalEffect = () => {
 const resetMegicalEffect = () => {
     life = prevState.life;
     speed = prevState.speed;
+    isEnableSnakeMove = true;
 }
 
 const timeDelay = (fn, time = magicalEffectTime) => setTimeout(() => {fn()}, 1000 * time);
 
-const speedMode = (input=3) => {
-    speed = speed + input;
+const speedMode = () => {
+    speed = speed + speedModeIncreaseLimit;
 }
-const slowMode = (input=3) => {
-    speed = speed - input;
+const slowMode = () => {
+    speed = speed - slowModeIncreaseLimit;
+}
+const poisonMode = () => {
+    const half_length = Math.ceil(snakeArr.length / 2);    
+    snakeArr = snakeArr.splice(0,half_length);
+    // inputDir = { x: 0, y: 0 };
+    isEnableSnakeMove = false;
+}
+
+
+const setRandomMagicalFood = () => {
+    const rndInt = Math.floor(Math.random() * magicalModeList.length);
+    magicalMode = magicalModeList[rndInt];
 }
 
 const eatMagicalFood = (type=magicalMode) => {
-    if (snakeArr[0].x === magicalFoodPosition.x && snakeArr[0].y === magicalFoodPosition.y) {
-        foodEatSound.play();
-        
-        showMagicalFood = false;
-        magicalFoodPosition = {x: -100, y: -100};
-        const rndInt = Math.floor(Math.random() * magicalModeList.length)
-        magicalMode = magicalModeList[rndInt];
-        timeDelay(setMagicalFood, magicalEffectDelayTime);
-        setMegicalEffect();
-        if(type==='speed') {
-            speedMode();
-        } else if (type==='slow') {
-            slowMode();
-        }
-        timeDelay(resetMegicalEffect);
-    }  
+    if (showMagicalFood) {
+        if (snakeArr[0].x === magicalFoodPosition.x && snakeArr[0].y === magicalFoodPosition.y) {
+            foodEatSound.play();
+            
+            showMagicalFood = false;
+            // magicalFoodPosition = {x: -100, y: -100};
+            // const rndInt = Math.floor(Math.random() * magicalModeList.length)
+            // magicalMode = magicalModeList[rndInt];
+            setRandomMagicalFood();
+            timeDelay(setMagicalFood, magicalEffectDelayTime);
+            setMegicalEffect();
+            if(type==='speed') {
+                // speedMode();
+                poisonMode();
+            } else if (type==='slow') {
+                // slowMode();
+                poisonMode();
+            } else if (type==='poison') {
+                poisonMode();
+            } else if (type.match(/Face/g)) {
+                SNAKE_HEAD = eval(`FOOD_${type}`);
+                console.log('SNAKE_HEAD : ', SNAKE_HEAD);
+                poisonMode();
+            }
+
+            timeDelay(resetMegicalEffect);
+        } 
+    }
 }
 
 const startAutoHideMagicalFood = (status) => {
+    if (startMagicalFood) {
+        setRandomMagicalFood();
         const position = foodPositionBetween;
         const x = Math.floor(Math.random() * (position.max - position.min)) + position.min;
         const y = Math.floor(Math.random() * (position.max - position.min)) + position.min;
         magicalFoodPosition = { x, y };
         timeDelay(() => {showMagicalFood = !status; startAutoHideMagicalFood(!status)}, magicalEffectTime);
+    }
+        
 }
 
 const setMagicalFood = (position = foodPositionBetween) => {
+    startMagicalFood = true;
     showMagicalFood = true;
     startAutoHideMagicalFood(true);
     if (!randomeMoveMagicalFood) {
@@ -237,15 +308,41 @@ const setMagicalFood = (position = foodPositionBetween) => {
         magicalFoodPosition = { x, y };
     }
 }
-let itimeIterval = setInterval((position = foodPositionBetween) => {
+// let itimeIterval = setInterval((position = foodPositionBetween) => {
+//     if (showMagicalFood && randomeMoveMagicalFood) {
+//         setRandomMagicalFood();
+//         const x = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+//         const y = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+//         magicalFoodPosition = { x, y };
+//     }
+// }, randomMagialFoodIntervalTime*1000);
+
+// let ntimeIterval = setInterval((position = foodPositionBetween) => {
+//     if (randomeMoveNormalFood) {
+//         const x = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+//         const y = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+//         foodPosition = { x, y };
+//     }
+// }, randomNormalFoodIntervalTime*1000);
+
+const crazyRandomMoveNormalFood = (position = foodPositionBetween) => {
+    if (randomeMoveNormalFood) {
+        const x = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+        const y = Math.floor(Math.random() * (position.max - position.min)) + position.min;
+        foodPosition = { x, y };
+    }
+    timeDelay(crazyRandomMoveNormalFood, randomNormalFoodIntervalTime);
+};crazyRandomMoveNormalFood();
+
+const crazyRandomMoveMagicalFood = (position = foodPositionBetween) => {
     if (showMagicalFood && randomeMoveMagicalFood) {
+        setRandomMagicalFood();
         const x = Math.floor(Math.random() * (position.max - position.min)) + position.min;
         const y = Math.floor(Math.random() * (position.max - position.min)) + position.min;
         magicalFoodPosition = { x, y };
     }
-}, 5*1000);
-
-
+    timeDelay(crazyRandomMoveMagicalFood, randomMagialFoodIntervalTime);
+};crazyRandomMoveMagicalFood();
 
 
 
@@ -295,6 +392,47 @@ const eatFood = () => {
         foodPosition = getRandomeFoodPosition();
         manageLevel();
         if (score === 3) setMagicalFood();
+        // if (score === 10) randomeMoveMagicalFood = true;
+        // if (score === 20) randomeMoveNormalFood = true;
+        if (score === 5) {
+            magicalModeList = ['slow', 'speed', 'alienFace', 'poison'];
+            randomeMoveMagicalFood = true;
+            magicalEffectTime = 20;
+            magicalEffectDelayTime = 25;
+            randomMagialFoodIntervalTime = 5;
+            // randomNormalFoodIntervalTime = 5;
+            slowModeIncreaseLimit = 2;
+            speedModeIncreaseLimit = 2;
+        }
+        if (score === 10) {
+            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace',];
+            randomeMoveNormalFood = true;
+            magicalEffectTime = 15;
+            magicalEffectDelayTime = 20;
+            randomMagialFoodIntervalTime = 4;
+            randomNormalFoodIntervalTime = 5;
+            slowModeIncreaseLimit = 3;
+            speedModeIncreaseLimit = 3;
+        }
+        if (score === 20) {
+            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace', 'tigerFace', 'poison'];
+            magicalEffectTime = 10;
+            magicalEffectDelayTime = 15;
+            randomMagialFoodIntervalTime = 3;
+            randomNormalFoodIntervalTime = 4;
+            slowModeIncreaseLimit = 4;
+            speedModeIncreaseLimit = 4;
+        }
+        if (score === 40) {
+            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace', 'tigerFace', 'frogFace', 'pandaFace'];
+            magicalEffectTime = 10;
+            magicalEffectDelayTime = 10;
+            randomMagialFoodIntervalTime = 1;
+            randomNormalFoodIntervalTime = 1;
+            slowModeIncreaseLimit = 5;
+            speedModeIncreaseLimit = 5;
+        }
+
     }
 };
 
@@ -306,13 +444,15 @@ const getDirection = (inputDir) => {
 }
 
 const moveSnake = () => {
-    for (let i = snakeArr.length - 2; i >= 0; i--) {
-        snakeArr[i + 1] = { ...snakeArr[i] };
+    if (isEnableSnakeMove) {
+        for (let i = snakeArr.length - 2; i >= 0; i--) {
+            snakeArr[i + 1] = { ...snakeArr[i] };
+        }
+        const direction = getDirection(inputDir);
+        snakeArr[0].x += inputDir.x;
+        snakeArr[0].y += inputDir.y;
+        snakeArr[0].d = direction;
     }
-    const direction = getDirection(inputDir);
-    snakeArr[0].x += inputDir.x;
-    snakeArr[0].y += inputDir.y;
-    snakeArr[0].d = direction;
 };
 
 const displaySnake = () => {
@@ -325,7 +465,7 @@ const displaySnake = () => {
         if (i === 0) {
             // head            
             sankeElement.classList.add('s_head');
-            sankeElement.innerHTML = '';
+            sankeElement.innerHTML = SNAKE_HEAD;
             const direction = getDirection(inputDir);
             if(direction ==='L') sankeElement.classList.add('r-l');
             if(direction ==='R') sankeElement.classList.add('r-r');
