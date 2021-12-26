@@ -20,7 +20,25 @@
 
 <body>
     <div class="body">
-        <div id="initial_dialouge">Press any arrow key to start</div>
+        <!-- <div id="initial_dialouge">
+            <div class="links" id="links">
+                <span data-lite>lite</span> |
+                <span data-stable>stable</span> |
+                <span data-beta>beta</span>
+            </div>
+            <p class="initial_dialouge">Press any arrow key to start</p>
+        </div> -->
+        <div id="gameMode"></div>
+        <div id="initialDialouge">
+            
+            <p class="initial_dialouge">Press any arrow key to start</p>
+            <div class="links mt5" id="links">
+                try 👉 
+                <span class="lite" data-normal>Snake Normal</span>
+                <!-- <span class="stable" data-stable>stable</span> | -->
+                <!-- <span class="beta" data-beta>beta</span> -->
+            </div>
+        </div>
         <div id="modal">
             <img src="./game_assests/images/favicon.png" />
             <h3>Game Over</h3>
@@ -28,11 +46,27 @@
             <button onclick="resetGame()">Play again</button>
             <p></p>
         </div>
+        <!-- <div class="scoreBoard">
+            <p id="currentScoreBoard">Score: 0</p>
+            <hr />
+            <p id="highscoreBoard">HighScore: 0</p>
+        </div> -->
+        <!-- <div class="gameModeView">
+            <div id="profileFace">🐍</div>
+            <div id="gamemode_view"></div>
+            <div id="snake_version"></div>
+        </div> -->
         <div class="scoreBoard">
+            <div> 
+                <span id="profileFace">🐍 </span>
+                <span id="gameLevel" clss="snakeversion"> Snake Game</span>
+            </div>
+            <hr />
             <p id="currentScoreBoard">Score: 0</p>
             <hr />
             <p id="highscoreBoard">HighScore: 0</p>
         </div>
+        
         <div id="board"></div>
         <div id="gamepad"></div>
     </div>

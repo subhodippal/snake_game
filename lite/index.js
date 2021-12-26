@@ -33,7 +33,6 @@ console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanS, consoleStyleR
     highscoreBoard.innerHTML = 'HighScore: ' + highscore;
 })();
 
-
 // @$u6h0d!p ------------------------------------------- 
 // game function and method
 const resetGame = () => {
@@ -202,6 +201,13 @@ const keyInputHandler = (key) => {
     // }
 };
 
+const gotoLink = (endpoint) => {
+    const host = window.location.origin;
+    const url = `${host}/${endpoint}`;
+    window.location.href = url;
+}
+
+
 // Event Listners
 window.requestAnimationFrame(main);
 window.addEventListener('keydown', e => {
@@ -212,5 +218,11 @@ gamepad.addEventListener('click', (e) => {
     else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
     else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
     else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
+});
+
+links.addEventListener('click', (e) => {
+    if (e.target.dataset.lite != undefined) gotoLink('lite');
+    else if (e.target.dataset.normal != undefined) gotoLink('');
+    else if (e.target.dataset.advance != undefined) gotoLink('advance');
 });
 // @$u6h0d!p -------------------------------------------

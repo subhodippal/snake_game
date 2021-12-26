@@ -10,11 +10,14 @@ const acceptInputKeyCode = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 const boundaryArea = { min: 0, max: 20 };
 const foodPositionBetween = { min: 2, max: 18 };
 
+
 // foods 
 const FOOD = '🍓';
 const FOOD_speed = '🚴';
 const FOOD_slow = '🐢';
 const FOOD_poison = '🦠';
+const FOOD_stop = '🚦';
+const FOOD_reverse = '⌚';
 let SNAKE_HEAD = '';
 const FOOD_alienFace = '👽';
 const FOOD_skullFace = '💀';
@@ -23,8 +26,9 @@ const FOOD_angryFace = '👿';
 const FOOD_tigerFace = '🐯';
 const FOOD_frogFace = '🐸';
 const FOOD_cowFace = '🐮';
-const FOOD_ratFace = '🐭';
 const FOOD_pandaFace = '🐼';
+const FOOD_invisible = '🕶';
+const FOOD_music = '🔊';
 
 const about = {
     developed_by: 'Subhodip Pal',
@@ -64,12 +68,15 @@ let randomMagialFoodIntervalTime = 4;
 let randomNormalFoodIntervalTime = 5;
 let slowModeIncreaseLimit = 2;
 let speedModeIncreaseLimit = 2;
-let magicalMode = '';
+let magicalMode = '🚦';
 let showMagicalFood = false;
 let randomeMoveMagicalFood = false;
 let startMagicalFood = false;
 let randomeMoveNormalFood = false;
 let isEnableSnakeMove = true;
+let isEnableGamepad = true;
+let isSnakeBodyVisible = true;
+
 // let magicalFoodElement;
 
 let state = {
@@ -98,13 +105,29 @@ gamepad.style.display = !!supportsTouch ? 'flex' : 'none';
 
 
 (async () => {
-    const highscoreJson = await localStorage.getItem('highscore');
+    const highscoreJson = await localStorage.getItem('highscore_advance');
     highscore = !!highscoreJson ? JSON.parse(highscoreJson) : 0;
     highscoreBoard.innerHTML = 'HighScore: ' + highscore;
 })();
 
 document.querySelector('#modal p').innerText = about.made_by;
 
+// (() => {
+//     let origin = window.location.origin;
+//     let href = window.location.href;
+//     let x = href.split(origin);
+//     let endPoint = x[1];
+//     if (endPoint=== endPoint.match(/lite/g)) {
+//         // snake_version.innerHTML = 'Snake Lite';
+//         // document.querySelector('.links .lite').style.color = '#223000';
+//     } else if (endPoint=== endPoint.match(/beta/g)) {
+//         // snake_version.innerHTML = 'Snake Beta';
+//         // document.querySelector('.links .lite').style.color = '#223000';
+//     } else {
+//         // snake_version.innerHTML = 'Snake Stable';
+//         // document.querySelector('.links .stable').style.color = '#223000';
+//     }
+// })();
 
 // @$u6h0d!p ------------------------------------------- 
 // game function and method
@@ -118,7 +141,7 @@ const resetGame = () => {
     // snakeArr = [{ x: 12, y: 15 }];
     score = 0;
     speed = 4;
-    initial_dialouge.style.display = "block";
+    initialDialouge.style.display = "block";
     manageScoreBoard('reset');
     startMagicalFood = false;
     showMagicalFood = false;
@@ -126,6 +149,13 @@ const resetGame = () => {
     randomeMoveNormalFood = false;
     state.gameState = 'initial';
     SNAKE_HEAD = '';
+    gameLevel.innerHTML = 'Snake Pro';
+
+    isEnableSnakeMove = true;
+    isEnableGamepad = true;
+    gameMode.innerHTML = '';
+    gameMode.classList.remove("contentvisible");
+    gameMode.classList.add("contenthidden"); 
 };
 
 const manageScoreBoard = (status) => {
@@ -174,7 +204,7 @@ const manageMagicalFood = () => {
      * faces:  😎🤑😛😜😇😌🤖👽👻💀👹👿😺👩👨🎅🐯🦁🐮🐷🐸🐵🐶🐱🐭🐹🐰🐻🐼🐨🐗
      * food type 1: 🕷🐞🐌🐢🐜🦀🐟🐡🐠🍄
      * food type 2: 🍐🍏🍎🍊🍋🍉🍇🍓🍈🍒🍍🍅🍆🌶🌽🍔🍕🍥🍨🍦🍰🎂🍮🍬🍭🍫🍩🍺☕🍼🍭🦠 
-     * extra type: 🚴🏆🎖🕴👾🏍🚀🚦⛽🏠🏰⌚🕹⏳💎💰⚙❤🚫⏸▶👑💧🔥🔇🔊🍀
+     * extra type: 🚴🏆🎖🕴👾🏍🚀🚦⛽🏠🏰⌚🕹⏳💎💰⚙❤🚫⏸▶👑💧🔥🔇🔊🍀     🔊 👓 🕶
      * 
      * extras: 🌵 🔦📎〰➖◽◻ 🔲  
      * 
@@ -201,23 +231,13 @@ const manageMagicalFood = () => {
      * FOOD_disable_controller: 🕹
      */
 
-    // magicalModeList = ['slow', 'speed', 'poison', 'heal', 'magnet', 'distract', 'stones'];
     magicalModeList = ['slow', 'speed'];
     const rndInt = Math.floor(Math.random() * magicalModeList.length)
     magicalMode = magicalModeList[rndInt];
     updateMagicalModeList();
 
-    // alienFace = '👽';
-    // // skullFace = '💀';
-    // monsterFace = '👹';
-    // // angryFace = '👿';
-    // tigerFace = '🐯';
-    // frogFace = '🐸';
-    // // cowFace = '🐮';
-    // // ratFace = '🐭';
-    // pandaFace = '🐼';
-
-    // magicalMode = 'speed';
+    // ['BackgroundMusicpaush']
+    // make a food Music play/pause
 }
 manageMagicalFood();
 
@@ -232,27 +252,78 @@ const resetMegicalEffect = () => {
     life = prevState.life;
     speed = prevState.speed;
     isEnableSnakeMove = true;
+    isEnableGamepad = true;
+    gameMode.innerHTML = '';
+    gameMode.classList.remove("contentvisible");
+    gameMode.classList.add("contenthidden"); 
+    isSnakeBodyVisible  = true;
 }
 
 const timeDelay = (fn, time = magicalEffectTime) => setTimeout(() => {fn()}, 1000 * time);
 
 const speedMode = () => {
     speed = speed + speedModeIncreaseLimit;
+    showGameMode('Speed Mode!');
 }
 const slowMode = () => {
     speed = speed - slowModeIncreaseLimit;
+    showGameMode('Slow Mode!');
 }
 const poisonMode = () => {
-    const half_length = Math.ceil(snakeArr.length / 2);    
+    const half_length = Math.ceil(snakeArr.length / 2);
     snakeArr = snakeArr.splice(0,half_length);
-    // inputDir = { x: 0, y: 0 };
+    showGameMode('Half Life!');
+}
+const stopMode = () => {
+    isEnableGamepad = false;
     isEnableSnakeMove = false;
+    showGameMode('Stop!');
+}
+const invisibleMode = () => {
+    isSnakeBodyVisible=false;
+    showGameMode('Invisible Mode!');
+}
+const musicMode = () => {
+    if (bgMusicSound.paused) {
+        bgMusicSound.play();
+        showGameMode('Music Playing!');
+    } else {
+        bgMusicSound.pause();
+        showGameMode('Music Paused!');
+    }
+
+}
+const reverseMode = () => {
+    showGameMode('Reverse Mode');
+    snakeArr.reverse();
+    let direction = snakeArr[0].d;
+    if(direction==='U')  {
+        inputDir = { x: 1, y: 0 };
+    } else if (direction==='D') {
+        inputDir = { x: -1, y: 0 };
+    } else if (direction==='L') {
+        inputDir = { x: 0, y: 1 };
+    } else if (direction==='R') {
+        inputDir = { x: 0, y: -1 };
+    }
+    
 }
 
 
 const setRandomMagicalFood = () => {
     const rndInt = Math.floor(Math.random() * magicalModeList.length);
     magicalMode = magicalModeList[rndInt];
+}
+
+const showGameMode = (gameModeName = '') => {
+    gameMode.classList.remove("contenthidden");
+    gameMode.classList.add("contentvisible");
+    gameMode.innerHTML = gameModeName;
+    setTimeout(() => {
+        gameMode.classList.remove("contentvisible");
+        gameMode.classList.add("contenthidden");
+        gameMode.innerHTML = '';
+    }, 3000);
 }
 
 const eatMagicalFood = (type=magicalMode) => {
@@ -267,20 +338,27 @@ const eatMagicalFood = (type=magicalMode) => {
             setRandomMagicalFood();
             timeDelay(setMagicalFood, magicalEffectDelayTime);
             setMegicalEffect();
+
             if(type==='speed') {
-                // speedMode();
-                poisonMode();
+                speedMode();
             } else if (type==='slow') {
-                // slowMode();
-                poisonMode();
+                slowMode();
             } else if (type==='poison') {
                 poisonMode();
+            } else if (type==='invisible') {
+                invisibleMode();
+            } else if (type==='music') {
+                musicMode();
             } else if (type.match(/Face/g)) {
                 SNAKE_HEAD = eval(`FOOD_${type}`);
                 console.log('SNAKE_HEAD : ', SNAKE_HEAD);
-                poisonMode();
+                let faceName = type.split('Face')[0];
+                showGameMode(`${faceName} Face`);
+            } else if (type==='stop') {
+                stopMode();
+            } else if (type==='reverse') {
+                reverseMode();
             }
-
             timeDelay(resetMegicalEffect);
         } 
     }
@@ -375,7 +453,7 @@ const gameoverHandler = async () => {
     document.querySelector('#modal h4').innerText = `Your score is: ${score}`;
 
     // updatehighscore
-    await localStorage.setItem('highscore', JSON.stringify(highscore));
+    await localStorage.setItem('highscore_advance', JSON.stringify(highscore));
 };
 
 const eatFood = () => {
@@ -395,40 +473,40 @@ const eatFood = () => {
         // if (score === 10) randomeMoveMagicalFood = true;
         // if (score === 20) randomeMoveNormalFood = true;
         if (score === 5) {
-            magicalModeList = ['slow', 'speed', 'alienFace', 'poison'];
+            magicalModeList = ['slow', 'speed', 'alienFace', 'tigerFace'];
             randomeMoveMagicalFood = true;
             magicalEffectTime = 20;
             magicalEffectDelayTime = 25;
-            randomMagialFoodIntervalTime = 5;
+            randomMagialFoodIntervalTime = 6;
             // randomNormalFoodIntervalTime = 5;
             slowModeIncreaseLimit = 2;
             speedModeIncreaseLimit = 2;
         }
         if (score === 10) {
-            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace',];
+            magicalModeList = ['slow', 'speed', 'invisible', 'reverse', 'music', 'monsterFace', 'pandaFace'];
             randomeMoveNormalFood = true;
             magicalEffectTime = 15;
             magicalEffectDelayTime = 20;
-            randomMagialFoodIntervalTime = 4;
-            randomNormalFoodIntervalTime = 5;
+            randomMagialFoodIntervalTime = 5;
+            randomNormalFoodIntervalTime = 6;
             slowModeIncreaseLimit = 3;
             speedModeIncreaseLimit = 3;
         }
         if (score === 20) {
-            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace', 'tigerFace', 'poison'];
+            magicalModeList = ['slow', 'speed', 'reverse', 'invisible', 'alienFace', 'music', 'monsterFace', 'tigerFace'];
             magicalEffectTime = 10;
             magicalEffectDelayTime = 15;
-            randomMagialFoodIntervalTime = 3;
-            randomNormalFoodIntervalTime = 4;
+            randomMagialFoodIntervalTime = 4;
+            randomNormalFoodIntervalTime = 5;
             slowModeIncreaseLimit = 4;
             speedModeIncreaseLimit = 4;
         }
         if (score === 40) {
-            magicalModeList = ['slow', 'speed', 'alienFace', 'monsterFace', 'tigerFace', 'frogFace', 'pandaFace'];
+            magicalModeList = ['slow', 'speed', 'reverse', 'poison', 'invisible', 'monsterFace', 'music', 'tigerFace', 'frogFace', 'pandaFace'];
             magicalEffectTime = 10;
             magicalEffectDelayTime = 10;
-            randomMagialFoodIntervalTime = 1;
-            randomNormalFoodIntervalTime = 1;
+            randomMagialFoodIntervalTime = 2;
+            randomNormalFoodIntervalTime = 2;
             slowModeIncreaseLimit = 5;
             speedModeIncreaseLimit = 5;
         }
@@ -464,8 +542,13 @@ const displaySnake = () => {
         sankeElement.style.gridColumnStart = e.y;
         if (i === 0) {
             // head            
+            // sankeElement.classList.add('s_head');
             sankeElement.classList.add('s_head');
+
+            
             sankeElement.innerHTML = SNAKE_HEAD;
+            // sankeElement.innerHTML = '';
+            profileFace.innerHTML = SNAKE_HEAD || '🐍';
             const direction = getDirection(inputDir);
             if(direction ==='L') sankeElement.classList.add('r-l');
             if(direction ==='R') sankeElement.classList.add('r-r');
@@ -474,13 +557,17 @@ const displaySnake = () => {
         } else if (i == (snakeArr.length - 1)) {
             // tail
             sankeElement.classList.add('s_tail');
+            
             // sankeElement.innerHTML = '👹';
             // if(e.d ==='L') sankeElement.classList.add('r-l');
             // if(e.d ==='R') sankeElement.classList.add('r-r');
             // if(e.d ==='D') sankeElement.classList.add('r-d');
             // if(e.d ==='U') sankeElement.classList.add('r-u');
         } else {
-            sankeElement.classList.add('s_body');
+            if (isSnakeBodyVisible) {
+                sankeElement.classList.add('s_body');
+            }
+            // sankeElement.classList.add('s_body');
             // sankeElement.innerHTML = '👹';
             // if(e.d ==='L') sankeElement.classList.add('r-l');
             // if(e.d ==='R') sankeElement.classList.add('r-r');
@@ -517,35 +604,52 @@ const displayMagicalFood = () => {
 }
 
 const manageLevel = () => {
+    gameLevel.innerHTML = 'Level 1';
     if (score >= 10 && score < 20) {
         state.level = 1;
         speed = 5;
         life = ++life;
-    }
-    else if (score >= 20 && score < 30) {
+        gameLevel.innerHTML = 'Level 2';
+    } else if (score >= 20 && score < 30) {
         state.level = 2;
         speed = 6;
         life = ++life;
-    }
-    else if (score >= 30 && score < 40) {
+        gameLevel.innerHTML = 'Level 3';
+    } else if (score >= 30 && score < 40) {
         state.level = 3,
         speed = 7;
         life = ++life;
-    }
-    else if (score >= 40 && score < 50) {
+        gameLevel.innerHTML = 'Level 4';
+    } else if (score >= 40 && score < 50) {
         state.level = 4,
         speed = 8;
         life = ++life;
-    }
-    else if (score >= 50 && score < 60) {
+        gameLevel.innerHTML = 'Level 5';
+    } else if (score >= 50 && score < 60) {
         state.level = 5,
         speed = 9;
         life = ++life;
-    }
-    else if (score >= 60 && score < 70) {
+        gameLevel.innerHTML = 'Level 6';
+    } else if (score >= 60 && score < 70) {
         state.level = 6,
         speed = 10;
         life = ++life;
+        gameLevel.innerHTML = 'Level 7';
+    } else if (score >= 70 && score < 80) {
+        state.level = 7,
+        speed = 11;
+        life = ++life;
+        gameLevel.innerHTML = 'Level 8';
+    } else if (score >= 80 && score < 90) {
+        state.level = 8,
+        speed = 12;
+        life = ++life;
+        gameLevel.innerHTML = 'Level 9';
+    } else if (score >= 90) {
+        state.level = 9,
+        speed = 14;
+        life = ++life;
+        gameLevel.innerHTML = 'Level 10';
     }
 };
 
@@ -604,35 +708,44 @@ const isOppositeDirrection = (inputKey) => {
 
 // User input handler
 const keyInputHandler = (key) => {
-    if (state.gameState === 'initial') {
-        state.gameState = 'start'; // start the game
-        initial_dialouge.style.display = "none";
-        startSound.play();
-        bgMusicSound.play();
-        bgMusicSound.loop = true;
-    }
-
-    if (isOppositeDirrection(key)) {
-        // turnSound.play();
-        switch (key) {
-            case "ArrowUp":
-                inputDir = { x: -1, y: 0 };
-                break;
-
-            case "ArrowDown":
-                inputDir = { x: 1, y: 0 };
-                break;
-
-            case "ArrowLeft":
-                inputDir = { x: 0, y: -1 };
-                break;
-
-            case "ArrowRight":
-                inputDir = { x: 0, y: 1 };
-                break;
+    if (isEnableGamepad) {
+        if (state.gameState === 'initial') {
+            state.gameState = 'start'; // start the game
+            initialDialouge.style.display = "none";
+            startSound.play();
+            bgMusicSound.play();
+            bgMusicSound.loop = true;
+        }
+    
+        if (isOppositeDirrection(key)) {
+            // turnSound.play();
+            switch (key) {
+                case "ArrowUp":
+                    inputDir = { x: -1, y: 0 };
+                    break;
+    
+                case "ArrowDown":
+                    inputDir = { x: 1, y: 0 };
+                    break;
+    
+                case "ArrowLeft":
+                    inputDir = { x: 0, y: -1 };
+                    break;
+    
+                case "ArrowRight":
+                    inputDir = { x: 0, y: 1 };
+                    break;
+            }
         }
     }
+    
 };
+
+const gotoLink = (endpoint) => {
+    const origin = window.location.origin;
+    const url = `${origin}/${endpoint}`;
+    window.location.href = url;
+}
 
 // Event Listners
 window.requestAnimationFrame(main);
@@ -644,5 +757,11 @@ gamepad.addEventListener('click', (e) => {
     else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
     else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
     else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
+});
+
+links.addEventListener('click', (e) => {
+    if (e.target.dataset.lite != undefined) gotoLink('lite');
+    else if (e.target.dataset.normal != undefined) gotoLink('');
+    else if (e.target.dataset.beta != undefined) gotoLink('beta');
 });
 // @$u6h0d!p -------------------------------------------

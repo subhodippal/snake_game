@@ -19,7 +19,15 @@
 
 <body>
     <div class="body">
-        <div id="initial_dialouge">Press any arrow key to start</div>
+        <div id="initial_dialouge">
+            <div class="links" id="links">
+                also try 👉 
+                <!-- <span class="lite" data-lite>Snake Advance</span> | -->
+                <!-- <span class="stable" data-stable>stable</span> | -->
+                <span class="beta" data-advance>Snake Advance</span>
+            </div>
+            <p class="initial_dialouge">Press any arrow key to start</p>
+        </div>
         <div id="modal">
             <img src="./game_assests/images/favicon.png" />
             <h3>Game Over</h3>
@@ -28,6 +36,8 @@
             <p></p>
         </div>
         <div class="scoreBoard">
+            <div id="profile_face">🐍 <span id="gameLevel" clss="snakeversion"> Snake Game</span></div>
+            <hr />
             <p id="currentScoreBoard">Score: 0</p>
             <hr />
             <p id="highscoreBoard">HighScore: 0</p>

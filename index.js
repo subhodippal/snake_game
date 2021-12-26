@@ -78,6 +78,7 @@ const resetGame = () => {
     initial_dialouge.style.display = "block";
     manageScoreBoard('reset');
     gameState = 'initial';
+    gameLevel.innerHTML = 'Snake Game';
 };
 
 const manageScoreBoard = (status) => {
@@ -184,24 +185,36 @@ const displayFood = () => {
 };
 
 const manageLevel = () => {
-    if (score >= 10 && score < 20)
+    gameLevel.innerHTML = 'Level 1';
+    if (score >= 10 && score < 20) {
+        gameLevel.innerHTML = 'Level 2';
         speed = 5;
-    else if (score >= 20 && score < 30)
+    } else if (score >= 20 && score < 30) {
+        gameLevel.innerHTML = 'Level 3';
         speed = 6;
-    else if (score >= 30 && score < 40)
+    } else if (score >= 30 && score < 40) {
+        gameLevel.innerHTML = 'Level 4';
         speed = 7;
-    else if (score >= 40 && score < 50)
+    } else if (score >= 40 && score < 50) {
+        gameLevel.innerHTML = 'Level 5';
         speed = 8;
-    else if (score >= 50 && score < 60)
+    } else if (score >= 50 && score < 60) {
+        gameLevel.innerHTML = 'Level 6';
         speed = 9;
-    else if (score >= 60 && score < 70)
+    } else if (score >= 60 && score < 70) {
+        gameLevel.innerHTML = 'Level 7';
         speed = 10;
-    else if (score >= 70 && score < 80)
+    } else if (score >= 70 && score < 80) {
+        gameLevel.innerHTML = 'Level 8';
         speed = 12;
-    else if (score >= 80 && score < 90)
+    } else if (score >= 80 && score < 90) {
+        gameLevel.innerHTML = 'Level 9';
         speed = 14;
-    else if (score >= 90 && score < 100)
+    } else if (score >= 90 ) {
+        gameLevel.innerHTML = 'Level 10';
         speed = 16;
+    }
+        
     // else speed = 20;
 };
 
@@ -283,6 +296,12 @@ const keyInputHandler = (key) => {
     }
 };
 
+const gotoLink = (endpoint) => {
+    const host = window.location.origin;
+    const url = `${host}/${endpoint}`;
+    window.location.href = url;
+}
+
 // Event Listners
 window.requestAnimationFrame(main);
 window.addEventListener('keydown', e => {
@@ -293,5 +312,11 @@ gamepad.addEventListener('click', (e) => {
     else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
     else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
     else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
+});
+
+links.addEventListener('click', (e) => {
+    if (e.target.dataset.lite != undefined) gotoLink('lite');
+    else if (e.target.dataset.normal != undefined) gotoLink('');
+    else if (e.target.dataset.advance != undefined) gotoLink('advance');
 });
 // @$u6h0d!p -------------------------------------------

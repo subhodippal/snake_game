@@ -75,12 +75,12 @@
 .scoreBoard {
     position: absolute;
     top: 2rem;
-    right: 3rem;
+    left: 1rem;
     /* font-family: 'Kirang Haerang', cursive; */
     font-family: 'Acme', sans-serif;
     background: #f3f4a2;
     padding: .5rem 1rem;
-    border: 1rem solid rgb(62 23 8);
+    border: .5rem solid rgb(62 23 8);
     min-width: 10rem;
     width: max-content;
     font-size: 1.5rem;
@@ -156,12 +156,62 @@
     border-bottom: 1px solid #777;
 }
 
+
+.links {
+    position: absolute;
+	top: 10rem;
+	left: 1rem;
+	padding: .3rem .3rem;
+	width: max-content;
+	font-size: 1rem;
+    font-weight: 600;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+    color: #314401;
+    border: .2rem solid rgb(64, 88, 1);
+    border-radius: 20px;
+    padding: .5rem 1rem;
+    box-shadow: 2px 2px 6px #222;
+}
+.links span {
+    padding: 0 10px;
+    text-decoration: underline;
+}
+
+.links span:hover {
+    cursor: pointer;
+    color: #223000;
+}
+
+.scoreBoardSmall {
+    position: absolute;
+	top: .2rem;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-between;
+	align-items: center;
+    width: 80%;
+	font-size: 1.5rem;
+    font-weight: 600;
+	
+	
+    color: #314401;
+    border: .2rem solid #314401;
+    border-radius: 20px;
+    padding: .2rem .2rem;
+    /* box-shadow: 2px 2px 6px #222; */
+    visibility: hidden;
+}
+
 /* ------------------------- Media Query ------------------------ */
 
 
 
 @media only screen and (max-width: 600px) {
-    .scoreBoard {
+    /* .scoreBoard {
         position: absolute;
         top: 1rem;
         left: calc(50vw - 6.5rem  );
@@ -170,7 +220,7 @@
         background: #f3f4a2;
         font-size: 1.2rem;
         border: .5rem solid rgb(62 23 8);
-    }
+    } */
 
     #gamepad {
         display: flex;
@@ -181,5 +231,22 @@
     #board {
         margin-top: 110px;
     }
+    .scoreBoardSmall {
+        display: flex;
+        visibility: visible;
+    }
+    .scoreBoard {
+        display: none;
+    }
+    .links {
+        top: 3.5rem;
+        margin: auto;
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        padding: 0.3rem 0.2rem;
+    }
+
 }
 /* @$u6h0d!p -------------------------------------------  */
