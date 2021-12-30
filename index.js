@@ -17,12 +17,23 @@ const about = {
 };
 
 // --------------------- Console Output--------------------------------
-const consoleStyleCyanL = "color: #008b8b; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #008b8b";
-const consoleStyleRedL = "color: #dc143c; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #dc143c";
+// const consoleStyleCyanL = "color: #008b8b; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #008b8b";
+// const consoleStyleRedL = "color: #dc143c; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #dc143c";
+// const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
+// const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
+
+// console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
+
+
+
+const consoleStyleCyanL = "color: #008b8b; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #008b8b";
+const consoleStyleRedL = "color: #dc143c; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #dc143c";
 const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
 const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
 
 console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
+
+
 
 const aboutMe = () => {
     for (const property in about) {
@@ -31,8 +42,9 @@ const aboutMe = () => {
 };
 // ----------------------------- /Console Output ------------------------
 
-
+let prevKey = null;
 let speed = 4;
+let lastTime = 0;
 let lastPaintTime = 0;
 let snakeArr = [{ x: 12, y: 15 }];
 let score = 0;
@@ -40,6 +52,9 @@ let highscore = 0;
 let foodPosition = { x: 4, y: 15 };
 let previousInputKey = 0;
 let gameState = 'initial'; //pause, play, initial, stop, gameover
+let moveSnakeTimeThrottle = 50;
+let moveSnakeTimeDelay = 100;
+
 
 const supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 gamepad.innerHTML = supportsTouch ? `
@@ -62,6 +77,46 @@ gamepad.style.display = !!supportsTouch ? 'flex' : 'none';
 })();
 
 document.querySelector('#modal p').innerText = about.made_by;
+
+
+//-- Throttle function
+const throttle = (e,o)=>{
+    console.log('call throttle function', e , o);
+    let a = 0;
+    return (...n) => {
+        const r = (new Date).getTime();
+        console.log('$__ ', n);
+        if (!(r - a < o))
+            return a = r,
+            e(...n)
+    }
+};
+
+//-- Delay function
+const delay = (e,o) => {
+    console.log('call delay function');
+    console.log('DELAY function:  ', e);
+    return (...n) => {
+        setTimeout(() => {
+            e(...n);
+        }, o)
+    }
+}
+
+const calculateSnakeMovementSpeedTime = () => {
+    let baseSpeed = 1000;
+    if (speed === 4) baseSpeed = 800;
+    if (speed === 5) baseSpeed = 500;
+    if (speed === 6) baseSpeed = 350;
+    if (speed === 7) baseSpeed = 200;
+    if (speed === 8) baseSpeed = 60;
+    if (speed === 9) baseSpeed = 30;
+    if (speed === 10) baseSpeed = 10;
+
+    // let snakeMovemetSpeedInTime = baseSpeed / speed;
+    return baseSpeed;
+}
+
 
 
 // @$u6h0d!p ------------------------------------------- 
@@ -219,8 +274,18 @@ const manageLevel = () => {
 };
 
 
-// Main Game Engine
+//--- Throttle fucntion for manage the snake movement speed along with render speed
+const moveSnakeRender = () => {
+    const now = new Date();
+    if (now - lastTime >= calculateSnakeMovementSpeedTime()) {
+        moveSnake();
+        lastTime = now;
+    }
+}
+
+// // Main Game Engine
 const gameEngine = () => {
+
     // updateing the snake array and food!
     if (isColide(snakeArr)) {
         gameoverHandler();
@@ -236,13 +301,13 @@ const gameEngine = () => {
     eatingFood();
 
     // move snaek
-    moveSnake();
+    moveSnakeRender();
 };
 
 // game loop 
 const main = (ctime) => {
     window.requestAnimationFrame(main);
-    if ((ctime - lastPaintTime) / 1000 < 1 / speed) {
+    if ((ctime - lastPaintTime) / 1000 < 1 / 100) {
         return;
     }
     lastPaintTime = ctime;
@@ -261,11 +326,11 @@ const isOppositeDirrection = (inputKey) => {
     else if (inputDir.y === 0 && inputDir.x === 0)
         return true;
     else return false;
-    // return true;
 };
 
 // User input handler
 const keyInputHandler = (key) => {
+    prevKey = key;
     if (gameState === 'initial') {
         gameState = 'start'; // start the game
         initial_dialouge.style.display = "none";
@@ -273,24 +338,26 @@ const keyInputHandler = (key) => {
         bgMusicSound.play();
         bgMusicSound.loop = true;
     }
-
     if (isOppositeDirrection(key)) {
-        // turnSound.play();
         switch (key) {
             case "ArrowUp":
                 inputDir = { x: -1, y: 0 };
+                moveSnake();
                 break;
 
             case "ArrowDown":
                 inputDir = { x: 1, y: 0 };
+                moveSnake();
                 break;
 
             case "ArrowLeft":
                 inputDir = { x: 0, y: -1 };
+                moveSnake();
                 break;
 
             case "ArrowRight":
                 inputDir = { x: 0, y: 1 };
+                moveSnake();
                 break;
         }
     }
@@ -302,17 +369,40 @@ const gotoLink = (endpoint) => {
     window.location.href = url;
 }
 
+let t2LastTime = 0;
+const throttle2 = (fn, e, t) => {
+    const now = new Date();
+    if (now - t2LastTime >= t) {
+        fn(e);
+        t2LastTime = now;
+    }
+}
+
+const delay2 = (fn, e, t) => {
+    setTimeout(() => {
+        fn(e);
+    }, t);
+}
+
+const onKeyEvent = (e) => {
+    if (prevKey===e)
+        throttle2(moveSnake, e, moveSnakeTimeThrottle)
+    else
+        delay2(keyInputHandler, e, moveSnakeTimeDelay)
+}
+
 // Event Listners
 window.requestAnimationFrame(main);
-window.addEventListener('keydown', e => {
-    acceptInputKeyCode.includes(e.key) && keyInputHandler(e.key);
-});
-gamepad.addEventListener('click', (e) => {
+
+window.addEventListener("keydown", (e) => onKeyEvent(e.key));
+
+gamepad.addEventListener("click", delay(e=>{
     if (e.target.dataset.up != undefined) keyInputHandler('ArrowUp');
     else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
     else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
     else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
-});
+    // undefined != e.target.dataset.up ? keyInputHandler("ArrowUp") : undefined != e.target.dataset.down ? keyInputHandler("ArrowDown") : undefined != e.target.dataset.left ? keyInputHandler("ArrowLeft") : undefined != e.target.dataset.right && keyInputHandler("ArrowRight")
+}, 200));
 
 links.addEventListener('click', (e) => {
     if (e.target.dataset.lite != undefined) gotoLink('lite');
