@@ -10,7 +10,6 @@ const acceptInputKeyCode = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 const boundaryArea = { min: 0, max: 20 };
 const foodPositionBetween = { min: 2, max: 18 };
 
-
 // foods 
 const FOOD = '🍓';
 const FOOD_speed = '🚴';
@@ -30,31 +29,12 @@ const FOOD_pandaFace = '🐼';
 const FOOD_invisible = '🕶';
 const FOOD_music = '🔊';
 
-const about = {
-    developed_by: 'Subhodip Pal',
-    email: 'subhodip.india@gmail.com',
-    made_by: 'Made with ♥ by Subhodip',
-    game: 'This is a simple web based snake game, using javascript,html,and css',
-};
-
-// --------------------- Console Output--------------------------------
-const consoleStyleCyanL = "color: #008b8b; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #008b8b";
-const consoleStyleRedL = "color: #dc143c; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #dc143c";
-const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
-const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
-
-console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
-
-const aboutMe = () => {
-    for (const property in about) {
-        console.log(`%c${property}: %c${about[property]}`, consoleStyleRedS, consoleStyleCyanS);
-    }
-};
-// ----------------------------- /Console Output ------------------------
-
-
+let prevKey = null;
 let speed = 4;
+let lastTime = 0;
 let lastPaintTime = 0;
+let moveSnakeTimeThrottle = 100;
+let moveSnakeTimeDelay = 100;
 let snakeArr = [{ x: 12, y: 15, d: 'L' }]; // LRTB
 let score = 0;
 let highscore = 0;
@@ -76,8 +56,29 @@ let randomeMoveNormalFood = false;
 let isEnableSnakeMove = true;
 let isEnableGamepad = true;
 let isSnakeBodyVisible = true;
-
 // let magicalFoodElement;
+
+
+//-------------- Derveloper Credit & Console Output 
+const about = {
+    developed_by: 'Subhodip Pal',
+    email: 'subhodip.india@gmail.com',
+    made_by: 'Made with ♥ by Subhodip',
+    game: 'This is a simple web based snake game, using javascript,html,and css',
+};
+const consoleStyleCyanL = "color: #008b8b; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #008b8b";
+const consoleStyleRedL = "color: #dc143c; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #dc143c";
+const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
+const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
+console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
+const aboutMe = () => {
+    for (const property in about) {
+        console.log(`%c${property}: %c${about[property]}`, consoleStyleRedS, consoleStyleCyanS);
+    }
+};
+// ----------------------------- /Console Output ------------------------
+
+
 
 let state = {
     level: 0,
@@ -156,6 +157,7 @@ const resetGame = () => {
     gameMode.innerHTML = '';
     gameMode.classList.remove("contentvisible");
     gameMode.classList.add("contenthidden"); 
+    prevKey = null;
 };
 
 const manageScoreBoard = (status) => {
@@ -330,7 +332,7 @@ const eatMagicalFood = (type=magicalMode) => {
     if (showMagicalFood) {
         if (snakeArr[0].x === magicalFoodPosition.x && snakeArr[0].y === magicalFoodPosition.y) {
             foodEatSound.play();
-            
+            moveSnake();
             showMagicalFood = false;
             // magicalFoodPosition = {x: -100, y: -100};
             // const rndInt = Math.floor(Math.random() * magicalModeList.length)
@@ -465,6 +467,7 @@ const eatFood = () => {
             x: (snakeArr[0].x + inputDir.x),
             y: (snakeArr[0].y + inputDir.y)
         });
+        moveSnake();
         manageScoreBoard(+1);
         // add new food
         foodPosition = getRandomeFoodPosition();
@@ -654,6 +657,29 @@ const manageLevel = () => {
 };
 
 
+//-- Manage Snake Speed
+const calculateSnakeMovementSpeedTime = () => {
+    if (speed === 1) return 1000;
+    if (speed === 2) return 850;
+    if (speed === 3) return 750;
+    if (speed === 4) return 600;
+    if (speed === 5) return 450;
+    if (speed === 6) return 300;
+    if (speed === 7) return 200;
+    if (speed === 8) return 150;
+    if (speed === 9) return 100;
+    if (speed === 10) return 50;
+}
+
+//--- Throttle fucntion for manage the snake movement speed along with render speed
+const moveSnakeRender = () => {
+    const now = new Date();
+    if (now - lastTime >= calculateSnakeMovementSpeedTime()) {
+        moveSnake();
+        lastTime = now;
+    }
+}
+
 // Main Game Engine
 const gameEngine = () => {
     // updateing the snake array and food!
@@ -677,14 +703,13 @@ const gameEngine = () => {
     eatFood();
 
     // move snaek
-    moveSnake();
-    
+    moveSnakeRender();
 };
 
 // game loop 
 const main = (ctime) => {
     window.requestAnimationFrame(main);
-    if ((ctime - lastPaintTime) / 1000 < 1 / speed) {
+    if ((ctime - lastPaintTime) / 1000 < 1 / 100) {
         return;
     }
     lastPaintTime = ctime;
@@ -706,8 +731,10 @@ const isOppositeDirrection = (inputKey) => {
     // return true;
 };
 
+
 // User input handler
 const keyInputHandler = (key) => {
+    prevKey = key;
     if (isEnableGamepad) {
         if (state.gameState === 'initial') {
             state.gameState = 'start'; // start the game
@@ -722,18 +749,22 @@ const keyInputHandler = (key) => {
             switch (key) {
                 case "ArrowUp":
                     inputDir = { x: -1, y: 0 };
+                    moveSnake();
                     break;
     
                 case "ArrowDown":
                     inputDir = { x: 1, y: 0 };
+                    moveSnake();
                     break;
     
                 case "ArrowLeft":
                     inputDir = { x: 0, y: -1 };
+                    moveSnake();
                     break;
     
                 case "ArrowRight":
                     inputDir = { x: 0, y: 1 };
+                    moveSnake();
                     break;
             }
         }
@@ -747,16 +778,40 @@ const gotoLink = (endpoint) => {
     window.location.href = url;
 }
 
+let t2LastTime = 0;
+const throttle2 = (fn, e, t) => {
+    const now = new Date();
+    if (now - t2LastTime >= t) {
+        fn(e);
+        t2LastTime = now;
+    }
+}
+
+const delay2 = (fn, e, t) => {
+    setTimeout(() => {
+        fn(e);
+    }, t);
+}
+
+const onKeyEvent = (e) => {
+    if (prevKey===e)
+        throttle2(moveSnake, e, moveSnakeTimeThrottle)
+    else
+        delay2(keyInputHandler, e, moveSnakeTimeDelay)
+}
+
 // Event Listners
 window.requestAnimationFrame(main);
-window.addEventListener('keydown', e => {
-    acceptInputKeyCode.includes(e.key) && keyInputHandler(e.key);
-});
-gamepad.addEventListener('click', (e) => {
-    if (e.target.dataset.up != undefined) keyInputHandler('ArrowUp');
-    else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
-    else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
-    else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
+
+window.addEventListener("keydown", (e) => onKeyEvent(e.key));
+
+gamepad.addEventListener("mousedown", (e) => {
+    console.log('on mouse down');
+    if (e.target.dataset.up != undefined) onKeyEvent('ArrowUp');
+    else if (e.target.dataset.down != undefined) onKeyEvent('ArrowDown');
+    else if (e.target.dataset.left != undefined) onKeyEvent('ArrowLeft');
+    else if (e.target.dataset.right != undefined) onKeyEvent('ArrowRight');
+    // undefined != e.target.dataset.up ? keyInputHandler("ArrowUp") : undefined != e.target.dataset.down ? keyInputHandler("ArrowDown") : undefined != e.target.dataset.left ? keyInputHandler("ArrowLeft") : undefined != e.target.dataset.right && keyInputHandler("ArrowRight")
 });
 
 links.addEventListener('click', (e) => {

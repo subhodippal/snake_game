@@ -1,4 +1,4 @@
-// game constants and  variable
+//------------------ game constants and  variable
 let inputDir = { x: 0, y: 0 };
 const foodEatSound = new Audio('./game_assests/musics/eat1.mp3');
 // const turnSound = new Audio('game_assests/musics/turn1.mp3');
@@ -9,38 +9,6 @@ const bgMusicSound = new Audio('./game_assests/musics/bgMusicSound1.mp3');
 const acceptInputKeyCode = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 const boundaryArea = { min: 0, max: 20 };
 const foodPositionBetween = { min: 2, max: 18 };
-const about = {
-    developed_by: 'Subhodip Pal',
-    email: 'subhodip.india@gmail.com',
-    made_by: 'Made with ♥ by Subhodip',
-    game: 'This is a simple web based snake game, using javascript,html,and css',
-};
-
-// --------------------- Console Output--------------------------------
-// const consoleStyleCyanL = "color: #008b8b; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #008b8b";
-// const consoleStyleRedL = "color: #dc143c; padding: 3rem 0; font-size:3.5rem; text-shadow: 0px 0px 10px #dc143c";
-// const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
-// const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
-
-// console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
-
-
-
-const consoleStyleCyanL = "color: #008b8b; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #008b8b";
-const consoleStyleRedL = "color: #dc143c; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #dc143c";
-const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
-const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
-
-console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
-
-
-
-const aboutMe = () => {
-    for (const property in about) {
-        console.log(`%c${property}: %c${about[property]}`, consoleStyleRedS, consoleStyleCyanS);
-    }
-};
-// ----------------------------- /Console Output ------------------------
 
 let prevKey = null;
 let speed = 4;
@@ -52,10 +20,31 @@ let highscore = 0;
 let foodPosition = { x: 4, y: 15 };
 let previousInputKey = 0;
 let gameState = 'initial'; //pause, play, initial, stop, gameover
-let moveSnakeTimeThrottle = 50;
+let moveSnakeTimeThrottle = 100;
 let moveSnakeTimeDelay = 100;
 
 
+//-------------- Derveloper Credit & Console Output 
+const about = {
+    developed_by: 'Subhodip Pal',
+    email: 'subhodip.india@gmail.com',
+    made_by: 'Made with ♥ by Subhodip',
+    game: 'This is a simple web based snake game, using javascript,html,and css',
+};
+const consoleStyleCyanL = "color: #008b8b; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #008b8b";
+const consoleStyleRedL = "color: #dc143c; padding: 1rem 0; font-size:1.5rem; text-shadow: 0px 0px 10px #dc143c";
+const consoleStyleCyanS = "color: #008b8b; padding: .5rem 0; font-size:1rem;";
+const consoleStyleRedS = "color: #dc143c; padding: .5rem 0; font-size:1rem;";
+console.log(`%c Made with %c♥ %cby Subhodip`, consoleStyleCyanL, consoleStyleRedL, consoleStyleCyanL);
+const aboutMe = () => {
+    for (const property in about) {
+        console.log(`%c${property}: %c${about[property]}`, consoleStyleRedS, consoleStyleCyanS);
+    }
+};
+// ----------------------------- /Console Output ------------------------
+
+
+//-------------------- Check if device touchable or not
 const supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 gamepad.innerHTML = supportsTouch ? `
     <div class="row">
@@ -103,18 +92,15 @@ const delay = (e,o) => {
     }
 }
 
+//-- Manage Snake Speed
 const calculateSnakeMovementSpeedTime = () => {
-    let baseSpeed = 1000;
-    if (speed === 4) baseSpeed = 800;
-    if (speed === 5) baseSpeed = 500;
-    if (speed === 6) baseSpeed = 350;
-    if (speed === 7) baseSpeed = 200;
-    if (speed === 8) baseSpeed = 60;
-    if (speed === 9) baseSpeed = 30;
-    if (speed === 10) baseSpeed = 10;
-
-    // let snakeMovemetSpeedInTime = baseSpeed / speed;
-    return baseSpeed;
+    if (speed === 4) return 600;
+    if (speed === 5) return 450;
+    if (speed === 6) return 300;
+    if (speed === 7) return 200;
+    if (speed === 8) return 150;
+    if (speed === 9) return 100;
+    if (speed === 10) return 50;
 }
 
 
@@ -134,6 +120,7 @@ const resetGame = () => {
     manageScoreBoard('reset');
     gameState = 'initial';
     gameLevel.innerHTML = 'Snake Game';
+    prevKey = null;
 };
 
 const manageScoreBoard = (status) => {
@@ -186,7 +173,7 @@ const gameoverHandler = async () => {
     await localStorage.setItem('highscore', JSON.stringify(highscore));
 };
 
-const eatingFood = () => {
+const eatFood = () => {
     // if food eaten then increase snake length, respawn new food, increment score
     if (snakeArr[0].x === foodPosition.x && snakeArr[0].y === foodPosition.y) {
         // food eat
@@ -195,6 +182,7 @@ const eatingFood = () => {
             x: (snakeArr[0].x + inputDir.x),
             y: (snakeArr[0].y + inputDir.y)
         });
+        moveSnake();
         manageScoreBoard(+1);
         // add new food
         foodPosition = getRandomeFoodPosition();
@@ -298,7 +286,7 @@ const gameEngine = () => {
     displayFood();
 
     // if sneke eating food
-    eatingFood();
+    eatFood();
 
     // move snaek
     moveSnakeRender();
@@ -396,13 +384,13 @@ window.requestAnimationFrame(main);
 
 window.addEventListener("keydown", (e) => onKeyEvent(e.key));
 
-gamepad.addEventListener("click", delay(e=>{
-    if (e.target.dataset.up != undefined) keyInputHandler('ArrowUp');
-    else if (e.target.dataset.down != undefined) keyInputHandler('ArrowDown');
-    else if (e.target.dataset.left != undefined) keyInputHandler('ArrowLeft');
-    else if (e.target.dataset.right != undefined) keyInputHandler('ArrowRight');
+gamepad.addEventListener("click", (e) => {
+    if (e.target.dataset.up != undefined) onKeyEvent('ArrowUp');
+    else if (e.target.dataset.down != undefined) onKeyEvent('ArrowDown');
+    else if (e.target.dataset.left != undefined) onKeyEvent('ArrowLeft');
+    else if (e.target.dataset.right != undefined) onKeyEvent('ArrowRight');
     // undefined != e.target.dataset.up ? keyInputHandler("ArrowUp") : undefined != e.target.dataset.down ? keyInputHandler("ArrowDown") : undefined != e.target.dataset.left ? keyInputHandler("ArrowLeft") : undefined != e.target.dataset.right && keyInputHandler("ArrowRight")
-}, 200));
+});
 
 links.addEventListener('click', (e) => {
     if (e.target.dataset.lite != undefined) gotoLink('lite');
